@@ -1,0 +1,49 @@
+version: "3"
+services:
+  web:
+    image: nginx
+    volumes:
+      - ./:/var/www
+      - ./build/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8080:80"
+    links:
+      - app
+
+  app:
+    build:
+      context: ./
+      dockerfile: build/docker/Dockerfile
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    volumes:
+      - ./:/var/www
+    links:
+      - database
+      - cache
+    environment:
+      - "DB_PORT=5432"
+      - "DB_HOST=database"
+      - "REDIS_PORT=6379"
+      - "REDIS_HOST=cache"
+    ports:
+      - "8100:8000"
+
+  database:
+    image: mysql:5.6
+    volumes:
+      - dbdata:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=homestead"
+      - "MYSQL_USER=homestead"
+      - "MYSQL_PASSWORD=secret"
+      - "MYSQL_ROOT_PASSWORD=secret"
+    ports:
+      - "33061:3306"
+
+  cache:
+    image: redis:3.0
+    ports:
+      - "63791:6379"
+
+volumes:
+  dbdata:
