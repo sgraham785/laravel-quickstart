@@ -16,6 +16,7 @@ pipeline {
         }
         stage('Build Image') {
             steps {
+                sh "docker --version"
                 // dockerImage = docker.build(registry + ":$BUILD_NUMBER", "./build/docker/Dockerfile")
                 sh "docker build --file ./build/docker/Dockerfile --tag v.${registry}" + ":$BUILD_NUMBER" + " ."
                 // Install dependencies, create a new .env file and generate a new key, just for testing
