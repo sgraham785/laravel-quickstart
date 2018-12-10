@@ -38,10 +38,10 @@ pipeline {
             // sh "ansible-playbook -i ./ansible/hosts ./ansible/deploy.yml"
             sh "echo 'WE ARE DEPLOYING'"
         }
-    } catch(error) {
-        throw error
-    } finally {
-        // Any cleanup operations needed, whether we hit an error or not
-    }
+    // } catch(error) {
+    //     throw error
+    // } finally {
+    //     // Any cleanup operations needed, whether we hit an error or not
+    // }
 
 }
