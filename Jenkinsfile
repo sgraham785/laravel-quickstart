@@ -34,7 +34,7 @@ node {
             // If we had ansible installed on the server, setup to run an ansible playbook
             // sh "ansible-playbook -i ./ansible/hosts ./ansible/deploy.yml"
             sh "echo 'WE ARE DEPLOYING'"
-            docker.withRegistry('https://257101242541.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:b528274e-a1e9-4ab5-9c59-939da02c107e') {
+            docker.withRegistry('https://257101242541.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:jenkins-aws') {
                 dockerImage.push()
             }
         }
