@@ -8,11 +8,11 @@ node {
         }
         stage('build') {
             // options {
-                withAWS(credentials: 'b528274e-a1e9-4ab5-9c59-939da02c107e') {
-                    def login = ecrLogin()
+                // withAWS(credentials: 'b528274e-a1e9-4ab5-9c59-939da02c107e') {
+                //     def login = ecrLogin()
                 
             // }
-            docker.withRegistry('https://257101242541.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:b528274e-a1e9-4ab5-9c59-939da02c107e') {
+            docker.withRegistry('https://257101242541.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:jenkins-aws') {
                 dockerImage = docker.build("laravel-test" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
             }
             
@@ -23,7 +23,7 @@ node {
             }
             // Run any static asset building, if needed
             // sh "npm install && gulp --production"
-        }
+        // }
 
         // stage('test') {
         //     // Run any testing suites
