@@ -12,7 +12,10 @@ node {
                     def login = ecrLogin()
                 
             // }
-            dockerImage = docker.build("laravel-test" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
+            docker.withRegistry('https://257101242541.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:b528274e-a1e9-4ab5-9c59-939da02c107e') {
+                dockerImage = docker.build("laravel-test" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
+            }
+            
             // Install dependencies, create a new .env file and generate a new key, just for testing
             // sh "composer install"
             // sh "cp .env.example .env"
