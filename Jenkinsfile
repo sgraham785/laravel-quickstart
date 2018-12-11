@@ -7,7 +7,11 @@ node {
             checkout scm
         }
         stage('build') {
-            
+            // options {
+                withAWS(credentials: 'b528274e-a1e9-4ab5-9c59-939da02c107e') {
+                    def login = ecrLogin()
+                }
+            // }
             dockerImage = docker.build("laravel-test" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
             // Install dependencies, create a new .env file and generate a new key, just for testing
             // sh "composer install"
