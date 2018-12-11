@@ -7,7 +7,7 @@ node {
             checkout scm
         }
         stage('build') {
-            
+            sh 'whoami'
             dockerImage = docker.build("registry" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
             // Install dependencies, create a new .env file and generate a new key, just for testing
             // sh "composer install"
