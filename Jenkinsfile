@@ -7,7 +7,11 @@ node {
             checkout scm
         }
         stage('build') {
-            sh 'whoami'
+            sh "whoami"
+            sh "cat /etc/group | awk -F: '{print $1, $3, $4}' | while read group gid members; do
+    members=$members,$(awk -F: \"\$4 == $gid {print \",\" \$1}\" /etc/passwd);
+    echo \"$group: $members\" | sed 's/,,*/ /g';
+done"
             dockerImage = docker.build("registry" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
             // Install dependencies, create a new .env file and generate a new key, just for testing
             // sh "composer install"
