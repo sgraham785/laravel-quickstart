@@ -28,9 +28,10 @@ node {
         }
 
         stage('deploy to develop') {
-            container('kubectl') {
+            // container('kubectl') {
+                sh 'kubectl version'
                 sh "kubectl get pods"
-            }
+            // }
         }
     } catch(error) {
         throw error
