@@ -10,15 +10,19 @@ node {
             checkout scm
         }
         stage('build') {
-            docker.withRegistry($ECR_URL, $ECR_USER) {
+            docker.withRegistry("$ECR_URL","$ECR_USER") {
                 dockerImage = docker.build("$JOB_BASE_NAME" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
             }
         }
 
         stage('docker push') {
-            docker.withRegistry($ECR_URL, $ECR_USER) {
+            docker.withRegistry("$ECR_URL", "$ECR_USER") {
                 dockerImage.push()
             }
+        }
+
+        stage('deploy to develop') {
+
         }
     } catch(error) {
         throw error
