@@ -6,9 +6,9 @@ env.ECR_USER = 'ecr:us-east-1:jenkins-aws'
 
 def label = "worker-${UUID.randomUUID().toString()}"
 
-podTemplate(label: label, containers: [
-  containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
-]) {
+// podTemplate(label: label, containers: [
+//   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
+// ]) {
 node(label) {
     try {
         stage('source') {
@@ -39,4 +39,4 @@ node(label) {
     }
 
 }
-}
+// }
