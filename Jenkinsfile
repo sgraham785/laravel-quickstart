@@ -4,11 +4,6 @@ env.APP_NAME = 'laravel-test'
 env.ECR_URL = 'https://257101242541.dkr.ecr.us-east-1.amazonaws.com'
 env.ECR_USER = 'ecr:us-east-1:jenkins-aws'
 
-// def label = "worker-${UUID.randomUUID().toString()}"
-
-// podTemplate(label: label, containers: [
-//   containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
-// ]) {
 node {
     try {
         stage('source') {
@@ -17,7 +12,7 @@ node {
         }
         stage('build') {
             docker.withRegistry("$ECR_URL","$ECR_USER") {
-                dockerImage = docker.build("$APP_NAME" + ":$BUILD_NUMBER", "-f ./build/docker/Dockerfile .")
+                dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
             }
         }
 
@@ -28,11 +23,24 @@ node {
         }
 
         stage('deploy to develop') {
-            // container('kubectl') {
-                sh 'kubectl version'
-                sh "kubectl get pods"
+            sh 'kubectl appy -f ./deploy/k8s/development/deployment.yaml'
+            sh "kubectl appy -f ./deploy/k8s/development/service.yaml"
+        }
+
+        stage('promote to acceptance') {
+            dockerImage.tag('acceptance')
+            // docker.withRegistry("$ECR_URL", "$ECR_USER") {
+            //     dockerImage.push()
             // }
         }
+
+        stage('deploy to acceptance') {
+            sh 'kubectl appy -f ./deploy/k8s/acceptance/deployment.yaml'
+            sh "kubectl appy -f ./deploy/k8s/acceptance/service.yaml"
+        }
+
+
+
     } catch(error) {
         throw error
     } finally {
@@ -40,4 +48,3 @@ node {
     }
 
 }
-// }
