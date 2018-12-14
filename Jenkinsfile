@@ -23,8 +23,8 @@ node {
         }
 
         stage('deploy to develop') {
-            sh 'kubectl appy -f ./deploy/k8s/development/deployment.yaml'
-            sh "kubectl appy -f ./deploy/k8s/development/service.yaml"
+            sh 'kubectl apply -f ./deploy/k8s/development/deployment.yaml'
+            sh "kubectl apply -f ./deploy/k8s/development/service.yaml"
         }
 
         stage('promote to acceptance') {
@@ -35,8 +35,8 @@ node {
         }
 
         stage('deploy to acceptance') {
-            sh 'kubectl appy -f ./deploy/k8s/acceptance/deployment.yaml'
-            sh "kubectl appy -f ./deploy/k8s/acceptance/service.yaml"
+            sh 'kubectl apply -f ./deploy/k8s/acceptance/deployment.yaml'
+            sh "kubectl apply -f ./deploy/k8s/acceptance/service.yaml"
         }
 
 
