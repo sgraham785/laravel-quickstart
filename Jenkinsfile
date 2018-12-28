@@ -29,9 +29,9 @@ node {
 
         stage('promote to acceptance') {
             dockerImage.tag('acceptance')
-            // docker.withRegistry("$ECR_URL", "$ECR_USER") {
-            //     dockerImage.push()
-            // }
+            docker.withRegistry("$ECR_URL", "$ECR_USER") {
+                dockerImage.push()
+            }
         }
 
         stage('deploy to acceptance') {
