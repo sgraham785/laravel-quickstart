@@ -34,7 +34,7 @@ spec:
             
             stage('build') {
                 docker.withRegistry("$ECR_URL","$ECR_USER") {
-                    container('dind-slave') {
+                    container('dind') {
                         dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
                     }
                 }
