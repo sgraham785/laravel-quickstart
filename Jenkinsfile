@@ -37,6 +37,7 @@ spec:
             stage('build') {
                 docker.withRegistry("$ECR_URL","$ECR_USER") {
                     container('docker') {
+                        sh "ls -la"
                         dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
                     }
                 }
