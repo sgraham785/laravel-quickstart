@@ -56,10 +56,8 @@ spec:
             
             stage('build') {
                     sh "ls -la"
-                    
+                    docker.withRegistry("$ECR_URL","$ECR_USER") {
                     container('dind') {
-                        sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
-                        docker.withRegistry("$ECR_URL","$ECR_USER") {
                         sh "ls -la"
                         dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
                     }
