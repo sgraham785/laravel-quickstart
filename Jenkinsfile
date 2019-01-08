@@ -5,26 +5,7 @@ env.ECR_URL = 'https://257101242541.dkr.ecr.us-east-1.amazonaws.com'
 env.ECR_USER = 'ecr:us-east-1:jenkins-aws'
 
 def label = "slave-${UUID.randomUUID().toString()}"
-podTemplate(label: label, yaml: """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: docker
-    image: docker:1.11
-    securityContext:
-      privileged: true
-    command: ['cat']
-    tty: true
-    volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
-  volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
-"""
-  ) {
+podTemplate(label: label) {
     node(label) {
         try {
             stage('source') {
@@ -36,7 +17,7 @@ spec:
             
             stage('build') {
                 docker.withRegistry("$ECR_URL","$ECR_USER") {
-                    container('docker') {
+                    container('dind-slave') {
                         dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
                     }
                 }
