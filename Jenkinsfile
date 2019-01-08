@@ -35,6 +35,7 @@ spec:
     - name: kubectl
       hostPath:
         path: /usr/local/bin/kubectl
+        defaultMode: 0744
     - name: kubeconfig
       hostPath:
         path: /.kube/config
