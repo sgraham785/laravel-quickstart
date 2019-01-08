@@ -23,6 +23,7 @@ spec:
       mountPath: /var/lib/docker
     - name: kubectl
       mountPath: /usr/local/bin/kubectl
+      defaultMode: 0744
     - name: kubeconfig
       mountPath: /.kube/config
     env:
@@ -35,7 +36,6 @@ spec:
     - name: kubectl
       hostPath:
         path: /usr/local/bin/kubectl
-        defaultMode: 0744
     - name: kubeconfig
       hostPath:
         path: /.kube/config
