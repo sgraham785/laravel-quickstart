@@ -53,10 +53,10 @@ spec:
                     }
                 }
 
-                // stage('deploy to develop') {
-                //     sh 'kubectl apply -f ./deploy/k8s/development/deployment.yaml'
-                //     sh "kubectl apply -f ./deploy/k8s/development/service.yaml"
-                // }
+                stage('deploy to develop') {
+                    sh 'kubectl apply -f ./deploy/k8s/development/deployment.yaml'
+                    sh "kubectl apply -f ./deploy/k8s/development/service.yaml"
+                }
 
                 stage('promote to acceptance') {
                     dockerImage.tag('acceptance')
