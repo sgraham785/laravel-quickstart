@@ -10,7 +10,24 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: docker
+  - name: jnlp
+    image: jenkins/jnlp-slave:alpine
+    resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
+    imagePullPolicy: Always
+    env:
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.podIP
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
+  - name: dind
     image: docker:18.05-dind
     securityContext:
       privileged: true
@@ -38,7 +55,7 @@ spec:
             }
             
             stage('build') {
-                container('docker') {
+                container('dind') {
                     sh "ls -la"
                     docker.withRegistry("$ECR_URL","$ECR_USER") {
                     
