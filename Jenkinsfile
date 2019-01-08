@@ -21,10 +21,20 @@ spec:
       mountPath: /var/run/docker.sock
     - name: dind-storage
       mountPath: /var/lib/docker
+    - name: kubectl
+      mountPath: /usr/local/bin/kubectl
+    - name: kubeconfig
+      mountPath: /.kube/config
   volumes:
     - name: dockersock
       hostPath:
         path: /var/run/docker.sock
+    - name: kubectl
+      hostPath:
+        path: /usr/local/bin/kubectl
+    - name: kubeconfig
+      hostPath:
+        path: /.kube/config
     - name: dind-storage
       persistentVolumeClaim:
         claimName: dind-storage
@@ -39,12 +49,9 @@ spec:
                 // imageTag= readFile('.git/commit-id').trim()
             }
             container('dind') {
+                
                 stage('build') {
-
-                        // docker.withRegistry("$ECR_URL","$ECR_USER") {
-                            dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
-                        
-                    // }
+                    dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
                 }
 
                 stage('docker push') {
