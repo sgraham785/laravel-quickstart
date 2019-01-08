@@ -5,7 +5,24 @@ env.ECR_URL = 'https://257101242541.dkr.ecr.us-east-1.amazonaws.com'
 env.ECR_USER = 'ecr:us-east-1:jenkins-aws'
 
 def label = "slave-${UUID.randomUUID().toString()}"
-podTemplate(label: label) {
+podTemplate(label: label, yaml: """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: dind
+    image: docker:18.05-dind
+    securityContext:
+    privileged: true
+    volumeMounts:
+      - name: dind-storage
+        mountPath: /var/lib/docker
+  volumes:
+  - name: dind-storage
+    persistentVolumeClaim:
+      claimName: dind-storage
+"""
+  ) {
     node(label) {
         try {
             stage('source') {
