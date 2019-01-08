@@ -3,6 +3,7 @@
 env.APP_NAME = 'laravel-test'
 env.ECR_URL = 'https://257101242541.dkr.ecr.us-east-1.amazonaws.com'
 env.ECR_USER = 'ecr:us-east-1:jenkins-aws'
+
 def label = "slave-${UUID.randomUUID().toString()}"
 podTemplate(label: label, yaml: """
 apiVersion: v1
@@ -11,6 +12,8 @@ spec:
   containers:
   - name: docker
     image: docker:1.11
+    securityContext:
+      privileged: true
     command: ['cat']
     tty: true
     volumeMounts:
@@ -27,6 +30,8 @@ spec:
             stage('source') {
                 // Checkout the app at the given commit sha from the webhook
                 checkout scm
+                // sh "git rev-parse --short HEAD > .git/commit-id"
+                // imageTag= readFile('.git/commit-id').trim()
             }
             container('docker') {
                 stage('build') {
