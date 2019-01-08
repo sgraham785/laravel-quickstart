@@ -34,12 +34,14 @@ spec:
     command: ['cat']
     tty: true
     volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock
     - name: dind-storage
       mountPath: /var/lib/docker
   volumes:
-    # - name: dockersock
-    #   hostPath:
-    #     path: /var/run/docker.sock
+    - name: dockersock
+      hostPath:
+        path: /var/run/docker.sock
     - name: dind-storage
       persistentVolumeClaim:
         claimName: dind-storage
