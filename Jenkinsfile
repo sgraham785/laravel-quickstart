@@ -38,41 +38,38 @@ spec:
                 // sh "git rev-parse --short HEAD > .git/commit-id"
                 // imageTag= readFile('.git/commit-id').trim()
             }
-            
-            stage('build') {
-                    sh "ls -la"
-                    
-                container('dind') {
-                    sh "ls -la"
-                    docker.withRegistry("$ECR_URL","$ECR_USER") {
-                        dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
+            container('dind') {
+                stage('build') {
+
+                        // docker.withRegistry("$ECR_URL","$ECR_USER") {
+                            dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
+                        
+                    // }
+                }
+
+                stage('docker push') {
+                    docker.withRegistry("$ECR_URL", "$ECR_USER") {
+                        dockerImage.push("development")
                     }
                 }
-            }
 
-            // stage('docker push') {
-            //     docker.withRegistry("$ECR_URL", "$ECR_USER") {
-            //         dockerImage.push("development")
-            //     }
-            // }
+                // stage('deploy to develop') {
+                //     sh 'kubectl apply -f ./deploy/k8s/development/deployment.yaml'
+                //     sh "kubectl apply -f ./deploy/k8s/development/service.yaml"
+                // }
 
-            // stage('deploy to develop') {
-            //     sh 'kubectl apply -f ./deploy/k8s/development/deployment.yaml'
-            //     sh "kubectl apply -f ./deploy/k8s/development/service.yaml"
-            // }
-
-            stage('promote to acceptance') {
-                dockerImage.tag('acceptance')
-                docker.withRegistry("$ECR_URL", "$ECR_USER") {
-                    dockerImage.push('acceptance')
+                stage('promote to acceptance') {
+                    dockerImage.tag('acceptance')
+                    docker.withRegistry("$ECR_URL", "$ECR_USER") {
+                        dockerImage.push('acceptance')
+                    }
                 }
-            }
 
-            stage('deploy to acceptance') {
-                sh 'kubectl apply -f ./deploy/k8s/acceptance/deployment.yaml'
-                sh "kubectl apply -f ./deploy/k8s/acceptance/service.yaml"
+                // stage('deploy to acceptance') {
+                //     sh 'kubectl apply -f ./deploy/k8s/acceptance/deployment.yaml'
+                //     sh "kubectl apply -f ./deploy/k8s/acceptance/service.yaml"
+                // }
             }
-
 
 
         } catch(error) {
