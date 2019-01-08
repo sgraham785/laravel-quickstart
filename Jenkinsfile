@@ -10,17 +10,19 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: dind
-    image: docker:18.05-dind
+  - name: docker
+    image: docker:1.11
     securityContext:
-    privileged: true
+      privileged: true
+    command: ['cat']
+    tty: true
     volumeMounts:
-      - name: dind-storage
-        mountPath: /var/lib/docker
+    - name: dockersock
+      mountPath: /var/run/docker.sock
   volumes:
-  - name: dind-storage
-    persistentVolumeClaim:
-      claimName: dind-storage
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
 """
   ) {
     node(label) {
@@ -34,7 +36,7 @@ spec:
             
             stage('build') {
                 docker.withRegistry("$ECR_URL","$ECR_USER") {
-                    container('dind') {
+                    container('docker') {
                         dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
                     }
                 }
