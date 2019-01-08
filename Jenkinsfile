@@ -25,6 +25,9 @@ spec:
       mountPath: /usr/local/bin/kubectl
     - name: kubeconfig
       mountPath: /.kube/config
+    env:
+      - name: KUBECONFIG
+        value: /.kube/config
   volumes:
     - name: dockersock
       hostPath:
