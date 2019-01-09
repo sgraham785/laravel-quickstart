@@ -14,7 +14,9 @@ podTemplate(label: label) {
                 // sh "git rev-parse --short HEAD > .git/commit-id"
                 // imageTag= readFile('.git/commit-id').trim()
             }
+            
             container('dind') {
+            
                 docker.withRegistry("$ECR_URL", "$ECR_USER") {
                         
                     stage('build') {
@@ -32,14 +34,17 @@ podTemplate(label: label) {
 
                     stage('promote to acceptance') {
                         dockerImage.tag('acceptance')
-                        // docker.withRegistry("$ECR_URL", "$ECR_USER") {
-                            dockerImage.push('acceptance')
-                        // }
+                        dockerImage.push('acceptance')
                     }
 
                     stage('deploy to acceptance') {
                         sh 'kubectl apply -f ./deploy/k8s/acceptance/deployment.yaml'
                         sh "kubectl apply -f ./deploy/k8s/acceptance/service.yaml"
+                    }
+
+                    stage('approve acceptance') {
+                        input "Deploy to prod?"
+                        echo "Deployed"
                     }
                 }
             }
