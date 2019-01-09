@@ -24,6 +24,8 @@ spec:
     command: ['cat']
     tty: true
     volumeMounts:
+    - name: dockersock
+      mountPath: /var/run/docker.sock 
     - name: dind-storage
       mountPath: /var/lib/docker
   volumes:
