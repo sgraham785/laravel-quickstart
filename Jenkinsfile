@@ -12,7 +12,8 @@ podTemplate(label: label) {
                 // Checkout the app at the given commit sha from the webhook
                 checkout scm
                 sh "git rev-parse --short HEAD > .git/commit-id"
-                commitTag= readFile('.git/commit-id').trim()
+                commitHash = readFile('.git/commit-id').trim()
+                BUILD_HASH = "$BUILD_ID"-"$commitHash"
             }
             
             container('dind') {
@@ -20,11 +21,13 @@ podTemplate(label: label) {
                 docker.withRegistry("$ECR_URL", "$ECR_USER") {
                         
                     stage('build') {
-                        dockerImage = docker.build("$APP_NAME" + ":development", "-f ./build/docker/Dockerfile .")
+                        dockerImage = docker.build("$APP_NAME" + ":$BUILD_HASH", "-f ./build/docker/Dockerfile .")
                     }
 
                     stage('docker push') {
-                        dockerImage.push(["development", commitTag])
+                        dockerImage.push() // pushes $BUILD_HASH
+                        dockerImage.tag('development')
+                        dockerImage.push('development')
                     }
 
                     stage('deploy to develop') {
