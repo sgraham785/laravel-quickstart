@@ -24,8 +24,7 @@ podTemplate(label: label) {
                     }
 
                     stage('docker push') {
-                        dockerImage.tag(commitTag)
-                        dockerImage.push("development")
+                        dockerImage.push(["development", commitTag])
                     }
 
                     stage('deploy to develop') {
@@ -49,7 +48,7 @@ podTemplate(label: label) {
                     }
                 }
             }
-            
+
         } catch(error) {
             throw error
         } finally {
