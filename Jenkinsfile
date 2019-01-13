@@ -11,8 +11,8 @@ podTemplate(label: label) {
             stage('source') {
                 // Checkout the app at the given commit sha from the webhook
                 checkout scm
-                // sh "git rev-parse --short HEAD > .git/commit-id"
-                // imageTag= readFile('.git/commit-id').trim()
+                sh "git rev-parse --short HEAD > .git/commit-id"
+                commitTag= readFile('.git/commit-id').trim()
             }
             
             container('dind') {
@@ -24,6 +24,7 @@ podTemplate(label: label) {
                     }
 
                     stage('docker push') {
+                        dockerImage.tag(commitTag)
                         dockerImage.push("development")
                     }
 
