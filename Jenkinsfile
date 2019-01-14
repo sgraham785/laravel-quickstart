@@ -13,7 +13,7 @@ podTemplate(label: label) {
                 checkout scm
                 sh "git rev-parse --short HEAD > .git/commit-id"
                 commitHash = readFile('.git/commit-id').trim()
-                BUILD_HASH = "$BUILD_ID"-"$commitHash"
+                BUILD_HASH = "$BUILD_ID-$commitHash"
             }
             
             container('dind') {
