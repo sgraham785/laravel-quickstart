@@ -46,8 +46,17 @@ podTemplate(label: label) {
                     }
 
                     stage('approve acceptance') {
-                        input "Deploy to prod?"
-                        echo "Deployed"
+                        input "Promote to Prod & Deploy?"
+                    }
+
+                    stage('promote to production') {
+                        dockerImage.tag('production')
+                        dockerImage.push('production')
+                    }
+
+                    stage('deploy to production') {
+                        sh 'kubectl apply -f ./deploy/k8s/production/deployment.yaml --context prod-eks'
+                        sh "kubectl apply -f ./deploy/k8s/production/service.yaml --context prod-eks"
                     }
                 }
             }
