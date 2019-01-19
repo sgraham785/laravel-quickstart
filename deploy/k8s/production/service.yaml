@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: laravel-test
-  namespace: acceptance
+  namespace: production
   labels:
     name: laravel-test
 spec:
