@@ -7,16 +7,16 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: laravel-test
+      name: laravel-test
   template:
     metadata:
       labels:
-        app: laravel-test
+        name: laravel-test
     spec:
       containers:
         - name: laravel-test
           image: 257101242541.dkr.ecr.us-east-1.amazonaws.com/laravel-test:acceptance
           ports:
             - containerPort: 8000
-              name: http-port
+              name: https
               protocol: TCP
